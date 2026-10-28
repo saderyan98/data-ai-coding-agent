@@ -103,7 +103,15 @@ def parse_till_timestamp(value):
     ("2026-09-14T08:15:00"). Surrounding whitespace is ignored.
     Raise ValueError for anything else.
     """
-    raise NotImplementedError
+    value = value.strip()
+    try:
+        return datetime.strptime(value, "%d/%m/%Y %H:%M")
+    except ValueError:
+        pass
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        raise ValueError(f"not a valid till timestamp: {value!r}") from None
 
 
 def normalise_product_name(raw_name, products):
