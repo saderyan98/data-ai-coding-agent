@@ -116,4 +116,14 @@ def normalise_product_name(raw_name, products):
     >>> normalise_product_name(" flat-white ", products)
     'Flat White'
     """
-    raise NotImplementedError
+    def key(name):
+        return " ".join(name.replace("-", " ").lower().split())
+
+    wanted = key(raw_name)
+    if not wanted:
+        return None
+    for product in products:
+        names = [product["name"], *product.get("aliases", [])]
+        if any(key(name) == wanted for name in names):
+            return product["name"]
+    return None
